@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import User from "../models/user.model";
 import Note from "../models/note.model";
 import { hash, isMatch } from "../utils/hash";
+import env from "../env";
 
 interface IUser {
 	_id: string;
@@ -60,11 +61,11 @@ export const createAccount = async (req: Request, res: Response) => {
 
 	await user.save();
 
-	if (!process.env.ACCESS_TOKEN_SECRET) {
+	if (!env.ACCESS_TOKEN_SECRET) {
 		throw new Error("ACCESS_TOKEN_SECRET not configured");
 	}
 
-	const accessToken = jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET, {
+	const accessToken = jwt.sign({ user }, env.ACCESS_TOKEN_SECRET, {
 		expiresIn: "36000m",
 	});
 
@@ -99,13 +100,13 @@ export const login = async (req: Request, res: Response) => {
 
 	const validPassword = await isMatch(password, userInfo.password);
 
-	if (!process.env.ACCESS_TOKEN_SECRET) {
+	if (!env.ACCESS_TOKEN_SECRET) {
 		throw new Error("ACCESS_TOKEN_SECRET not configured");
 	}
 
 	if (userInfo.email == email && validPassword) {
 		const user = { user: userInfo };
-		const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+		const accessToken = jwt.sign(user, env.ACCESS_TOKEN_SECRET, {
 			expiresIn: "36000m",
 		});
 

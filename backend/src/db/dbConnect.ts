@@ -1,12 +1,10 @@
 import mongoose from "mongoose";
-import dotenv from "dotenv";
+import env from "../env";
 
-dotenv.config();
-
-if (!process.env.MONGO_URI) {
+if (!env.MONGO_URI) {
 	throw new Error("Missing MONGO_URI environment variable");
 }
-const dataConfig: string = process.env.MONGO_URI;
+const dataConfig: string = env.MONGO_URI;
 
 async function connectDB(): Promise<void> {
 	try {
