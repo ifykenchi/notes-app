@@ -1,27 +1,48 @@
 import React, { useState } from "react";
+import type { ChangeEvent } from "react";
 import ProfileInfo from "../Cards/ProfileInfo";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../SearchBar/SearchBar";
 
-const Navbar = ({ userInfo, onSearchNote, handleClearSearch }) => {
-	const [searchQuery, setSearchQuery] = useState("");
+interface UserInfo {
+	_id: string;
+	fullName: string;
+	email: string;
+}
+
+interface NavbarProps {
+	userInfo: UserInfo | null;
+	onSearchNote: (query: string) => void;
+	handleClearSearch: () => void;
+}
+
+const Navbar: React.FC<NavbarProps> = ({
+	userInfo,
+	onSearchNote,
+	handleClearSearch,
+}) => {
+	const [searchQuery, setSearchQuery] = useState<string>("");
 
 	const navigate = useNavigate();
 
-	const onLogout = () => {
+	const onLogout = (): void => {
 		localStorage.clear();
 		navigate("/login");
 	};
 
-	const handleSearch = () => {
+	const handleSearch = (): void => {
 		if (searchQuery) {
 			onSearchNote(searchQuery);
 		}
 	};
 
-	const onClearSearch = () => {
+	const onClearSearch = (): void => {
 		setSearchQuery("");
 		handleClearSearch();
+	};
+
+	const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
+		setSearchQuery(e.target.value);
 	};
 
 	return (
@@ -30,9 +51,7 @@ const Navbar = ({ userInfo, onSearchNote, handleClearSearch }) => {
 
 			<SearchBar
 				value={searchQuery}
-				onChange={({ target }) => {
-					setSearchQuery(target.value);
-				}}
+				onChange={handleInputChange}
 				handleSearch={handleSearch}
 				onClearSearch={onClearSearch}
 			/>

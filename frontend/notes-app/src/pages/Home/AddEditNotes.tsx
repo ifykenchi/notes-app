@@ -2,23 +2,45 @@ import React, { useState } from "react";
 import TagInput from "../../components/Input/TagInput";
 import { MdClose } from "react-icons/md";
 import axiosInstance from "../../utils/axiosInstance";
+import { AxiosError } from "axios";
 
-const AddEditNotes = ({
+interface NoteData {
+	_id?: string;
+	title?: string;
+	content?: string;
+	tags?: string[];
+}
+
+interface AddEditNotesProps {
+	noteData?: NoteData | null;
+	type: "add" | "edit";
+	getAllNotes: () => void;
+	onClose: () => void;
+	showToastMessage: (message: string) => void;
+}
+
+interface NoteResponse {
+	error?: boolean;
+	note?: any;
+	message?: string;
+}
+
+const AddEditNotes: React.FC<AddEditNotesProps> = ({
 	noteData,
 	type,
 	getAllNotes,
 	onClose,
 	showToastMessage,
 }) => {
-	const [title, setTitle] = useState(noteData?.title || "");
-	const [content, setContent] = useState(noteData?.content || "");
-	const [tags, setTags] = useState(noteData?.tags || []);
-	const [error, setError] = useState(null);
+	const [title, setTitle] = useState<string>(noteData?.title || "");
+	const [content, setContent] = useState<string>(noteData?.content || "");
+	const [tags, setTags] = useState<string[]>(noteData?.tags || []);
+	const [error, setError] = useState<string | null>(null);
 
 	// Add Note
 	const addNewNote = async () => {
 		try {
-			const response = await axiosInstance.post("/add-note", {
+			const response = await axiosInstance.post<NoteResponse>("/add-note", {
 				title,
 				content,
 				tags,
@@ -30,26 +52,31 @@ const AddEditNotes = ({
 				onClose();
 			}
 		} catch (error) {
+			const axiosError = error as AxiosError<NoteResponse>;
 			if (
-				error.response &&
-				error.response.data &&
-				error.response.data.message
+				axiosError.response &&
+				axiosError.response.data &&
+				axiosError.response.data.message
 			) {
-				setError(error.response.data.message);
+				setError(axiosError.response.data.message);
 			}
 		}
 	};
 
 	// Edit Note
 	const editNote = async () => {
+		if (!noteData?._id) return;
 		const noteId = noteData._id;
 
 		try {
-			const response = await axiosInstance.put("/edit-note/" + noteId, {
-				title,
-				content,
-				tags,
-			});
+			const response = await axiosInstance.put<NoteResponse>(
+				"/edit-note/" + noteId,
+				{
+					title,
+					content,
+					tags,
+				}
+			);
 
 			if (response.data && response.data.note) {
 				showToastMessage("Note Updated successfully");
@@ -57,12 +84,13 @@ const AddEditNotes = ({
 				onClose();
 			}
 		} catch (error) {
+			const axiosError = error as AxiosError<NoteResponse>;
 			if (
-				error.response &&
-				error.response.data &&
-				error.response.data.message
+				axiosError.response &&
+				axiosError.response.data &&
+				axiosError.response.data.message
 			) {
-				setError(error.response.data.message);
+				setError(axiosError.response.data.message);
 			}
 		}
 	};
@@ -110,7 +138,6 @@ const AddEditNotes = ({
 			<div className='flex flex-col gap-2 mt-4'>
 				<label className='input-label'>CONTENT</label>
 				<textarea
-					type='text'
 					className='text-sm text-slate-950 outline-none bg-slate-50 p-2 rounded'
 					placeholder='Content'
 					rows={10}

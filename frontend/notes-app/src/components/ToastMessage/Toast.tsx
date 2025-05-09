@@ -2,7 +2,16 @@ import React, { useEffect } from "react";
 import { LuCheck } from "react-icons/lu";
 import { MdDeleteOutline } from "react-icons/md";
 
-const Toast = ({ isShown, message, type, onClose }) => {
+type ToastType = "success" | "delete" | "add" | "edit" | "pin" | undefined;
+
+interface ToastProps {
+	isShown: boolean;
+	message: string;
+	type: ToastType;
+	onClose: () => void;
+}
+
+const Toast: React.FC<ToastProps> = ({ isShown, message, type, onClose }) => {
 	useEffect(() => {
 		const timeoutId = setTimeout(() => {
 			onClose();

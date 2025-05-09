@@ -1,27 +1,33 @@
 import React, { useState } from "react";
+import type { KeyboardEvent, ChangeEvent } from "react";
 import { MdAdd, MdClose } from "react-icons/md";
 
-const TagInput = ({ tags, setTags }) => {
-	const [inputValue, setInputValue] = useState("");
+interface TagInputProps {
+	tags: string[];
+	setTags: React.Dispatch<React.SetStateAction<string[]>>;
+}
 
-	const handleInputChange = (e) => {
+const TagInput: React.FC<TagInputProps> = ({ tags, setTags }) => {
+	const [inputValue, setInputValue] = useState<string>("");
+
+	const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setInputValue(e.target.value);
 	};
 
-	const addNewTag = () => {
+	const addNewTag = (): void => {
 		if (inputValue.trim() !== "") {
 			setTags([...tags, inputValue.trim()]);
 			setInputValue("");
 		}
 	};
 
-	const handleKeyDown = (e) => {
+	const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>): void => {
 		if (e.key === "Enter") {
 			addNewTag();
 		}
 	};
 
-	const handleRemoveTag = (tagToRemove) => {
+	const handleRemoveTag = (tagToRemove: string): void => {
 		setTags(tags.filter((tag) => tag !== tagToRemove));
 	};
 

@@ -10,27 +10,55 @@ import Toast from "../../components/ToastMessage/Toast";
 import EmptyCard from "../../components/EmptyCard/EmptyCard";
 import AddNotesImg from "../../assets/images/add-notes.svg";
 import NoDataImg from "../../assets/images/no-data.svg";
+import { AxiosError } from "axios";
 
-const Home = () => {
-	const [openAddEditModal, setOpenAddEditModal] = useState({
+interface Note {
+	_id: string;
+	title: string;
+	content: string;
+	tags: string[];
+	isPinned: boolean;
+	createdOn: string;
+}
+
+interface UserInfo {
+	_id: string;
+	fullName: string;
+	email: string;
+}
+
+interface AddEditModalState {
+	isShown: boolean;
+	type: "add" | "edit";
+	data: Note | null;
+}
+
+interface ToastState {
+	isShown: boolean;
+	message: string;
+	type?: "add" | "edit" | "delete" | "pin";
+}
+
+const Home: React.FC = () => {
+	const [openAddEditModal, setOpenAddEditModal] = useState<AddEditModalState>({
 		isShown: false,
 		type: "add",
 		data: null,
 	});
 
-	const [showToastMsg, setShowToastMsg] = useState({
+	const [showToastMsg, setShowToastMsg] = useState<ToastState>({
 		isShown: false,
 		message: "",
 		type: "add",
 	});
 
-	const [allNotes, setAllNotes] = useState([]);
-	const [userInfo, setUserInfo] = useState(null);
-	const [isSearch, setIsSearch] = useState(false);
+	const [allNotes, setAllNotes] = useState<Note[]>([]);
+	const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+	const [isSearch, setIsSearch] = useState<boolean>(false);
 
 	const navigate = useNavigate();
 
-	const handleEdit = (noteDetails) => {
+	const handleEdit = (noteDetails: Note) => {
 		setOpenAddEditModal({
 			isShown: true,
 			data: noteDetails,
@@ -38,7 +66,7 @@ const Home = () => {
 		});
 	};
 
-	const showToastMessage = (message, type) => {
+	const showToastMessage = (message: string, type?: ToastState["type"]) => {
 		setShowToastMsg({
 			isShown: true,
 			message,
@@ -50,17 +78,19 @@ const Home = () => {
 		setShowToastMsg({
 			isShown: false,
 			message: "",
+			type: "add",
 		});
 	};
 
 	const getUserInfo = async () => {
 		try {
-			const response = await axiosInstance.get("/get-user");
+			const response = await axiosInstance.get<{ user: UserInfo }>("/get-user");
 			if (response.data && response.data.user) {
 				setUserInfo(response.data.user);
 			}
 		} catch (error) {
-			if (error.response.status === 401) {
+			const axiosError = error as AxiosError;
+			if (axiosError.response?.status === 401) {
 				localStorage.clear();
 				navigate("/login");
 			}
@@ -69,7 +99,9 @@ const Home = () => {
 
 	const getAllNotes = async () => {
 		try {
-			const response = await axiosInstance.get("/get-all-notes");
+			const response = await axiosInstance.get<{ notes: Note[] }>(
+				"/get-all-notes"
+			);
 
 			if (response.data && response.data.notes) {
 				setAllNotes(response.data.notes);
@@ -79,32 +111,39 @@ const Home = () => {
 		}
 	};
 
-	const deleteNote = async (data) => {
+	const deleteNote = async (data: Note) => {
 		const noteId = data._id;
 
 		try {
-			const response = await axiosInstance.delete("/delete-note/" + noteId);
+			const response = await axiosInstance.delete<{
+				error?: boolean;
+				message?: string;
+			}>("/delete-note/" + noteId);
 
-			if (response.data && !response.data.errr) {
+			if (response.data && !response.data.error) {
 				showToastMessage("Note Deleted successfully", "delete");
 				getAllNotes();
 			}
 		} catch (error) {
+			const axiosError = error as AxiosError;
 			if (
-				error.response &&
-				error.response.data &&
-				error.response.data.message
+				axiosError.response &&
+				axiosError.response.data //&&
+				//axiosError.response.data.message
 			) {
 				console.log("An unexpected error occurred. Please try again.");
 			}
 		}
 	};
 
-	const onSearchNote = async (query) => {
+	const onSearchNote = async (query: string) => {
 		try {
-			const response = await axiosInstance.get("/search-notes", {
-				params: { query },
-			});
+			const response = await axiosInstance.get<{ notes: Note[] }>(
+				"/search-notes",
+				{
+					params: { query },
+				}
+			);
 
 			if (response.data && response.data.notes) {
 				setIsSearch(true);
@@ -115,11 +154,11 @@ const Home = () => {
 		}
 	};
 
-	const updateIsPinned = async (noteData) => {
+	const updateIsPinned = async (noteData: Note) => {
 		const noteId = noteData._id;
 
 		try {
-			const response = await axiosInstance.put(
+			const response = await axiosInstance.put<{ note: Note }>(
 				"/update-note-pinned/" + noteId,
 				{
 					isPinned: !noteData.isPinned,
