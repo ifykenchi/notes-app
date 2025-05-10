@@ -1,11 +1,7 @@
 import React, { useState } from "react";
 import type { KeyboardEvent, ChangeEvent } from "react";
 import { MdAdd, MdClose } from "react-icons/md";
-
-interface TagInputProps {
-	tags: string[];
-	setTags: React.Dispatch<React.SetStateAction<string[]>>;
-}
+import type { TagInputProps } from "../../interfaces/components";
 
 const TagInput: React.FC<TagInputProps> = ({ tags, setTags }) => {
 	const [inputValue, setInputValue] = useState<string>("");

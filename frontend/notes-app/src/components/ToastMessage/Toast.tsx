@@ -1,15 +1,7 @@
 import React, { useEffect } from "react";
 import { LuCheck } from "react-icons/lu";
 import { MdDeleteOutline } from "react-icons/md";
-
-type ToastType = "success" | "delete" | "add" | "edit" | "pin" | undefined;
-
-interface ToastProps {
-	isShown: boolean;
-	message: string;
-	type: ToastType;
-	onClose: () => void;
-}
+import type { ToastProps } from "../../interfaces/components";
 
 const Toast: React.FC<ToastProps> = ({ isShown, message, type, onClose }) => {
 	useEffect(() => {

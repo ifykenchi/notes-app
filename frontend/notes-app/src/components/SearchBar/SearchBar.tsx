@@ -1,14 +1,7 @@
 import React from "react";
-import type { ChangeEvent } from "react";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { IoMdClose } from "react-icons/io";
-
-interface SearchBarProps {
-	value: string;
-	onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-	handleSearch: () => void;
-	onClearSearch: () => void;
-}
+import type { SearchBarProps } from "../../interfaces/components";
 
 const SearchBar: React.FC<SearchBarProps> = ({
 	value,

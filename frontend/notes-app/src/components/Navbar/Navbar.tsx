@@ -3,18 +3,7 @@ import type { ChangeEvent } from "react";
 import ProfileInfo from "../Cards/ProfileInfo";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../SearchBar/SearchBar";
-
-interface UserInfo {
-	_id: string;
-	fullName: string;
-	email: string;
-}
-
-interface NavbarProps {
-	userInfo: UserInfo | null;
-	onSearchNote: (query: string) => void;
-	handleClearSearch: () => void;
-}
+import type { NavbarProps } from "../../interfaces/components";
 
 const Navbar: React.FC<NavbarProps> = ({
 	userInfo,

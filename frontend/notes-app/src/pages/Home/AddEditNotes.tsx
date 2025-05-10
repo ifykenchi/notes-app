@@ -3,27 +3,7 @@ import TagInput from "../../components/Input/TagInput";
 import { MdClose } from "react-icons/md";
 import axiosInstance from "../../utils/axiosInstance";
 import { AxiosError } from "axios";
-
-interface NoteData {
-	_id?: string;
-	title?: string;
-	content?: string;
-	tags?: string[];
-}
-
-interface AddEditNotesProps {
-	noteData?: NoteData | null;
-	type: "add" | "edit";
-	getAllNotes: () => void;
-	onClose: () => void;
-	showToastMessage: (message: string) => void;
-}
-
-interface NoteResponse {
-	error?: boolean;
-	note?: any;
-	message?: string;
-}
+import type { AddEditNotesProps, NoteResponse } from "../../interfaces/pages";
 
 const AddEditNotes: React.FC<AddEditNotesProps> = ({
 	noteData,

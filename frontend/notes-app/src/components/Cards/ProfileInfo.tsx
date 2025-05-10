@@ -1,16 +1,6 @@
 import React from "react";
 import { getInitials } from "../../utils/helper";
-
-interface UserInfo {
-	_id: string;
-	fullName: string;
-	email: string;
-}
-
-interface ProfileInfoProps {
-	userInfo: UserInfo | null;
-	onLogout: () => void;
-}
+import type { ProfileInfoProps } from "../../interfaces/components";
 
 const ProfileInfo: React.FC<ProfileInfoProps> = ({ userInfo, onLogout }) => {
 	return (

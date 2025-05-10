@@ -1,9 +1,5 @@
 import React from "react";
-
-interface EmptyCardProps {
-	imgSrc: string;
-	message: string;
-}
+import type { EmptyCardProps } from "../../interfaces/components";
 
 const EmptyCard: React.FC<EmptyCardProps> = ({ imgSrc, message }) => {
 	return (

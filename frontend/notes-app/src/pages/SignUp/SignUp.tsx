@@ -6,18 +6,10 @@ import PasswordInput from "../../components/Input/PasswordInput";
 import { validateEmail } from "../../utils/helper";
 import axiosInstance from "../../utils/axiosInstance";
 import { AxiosError } from "axios";
-
-interface SignUpResponse {
-	accessToken?: string;
-	error?: boolean;
-	message?: string;
-}
-
-interface SignUpFormData {
-	fullName: string;
-	email: string;
-	password: string;
-}
+import type {
+	SignUpResponse,
+	SignUpFormData,
+} from "../../interfaces/pages.tsx";
 
 const SignUp: React.FC = () => {
 	const [name, setName] = useState<string>("");

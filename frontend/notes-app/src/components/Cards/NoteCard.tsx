@@ -1,16 +1,6 @@
 import moment from "moment";
 import { MdOutlinePushPin, MdCreate, MdDelete } from "react-icons/md";
-
-interface NoteCardProps {
-	title: string;
-	date: string | Date;
-	content: string;
-	tags: string[];
-	isPinned: boolean;
-	onEdit: () => void;
-	onDelete: () => void;
-	onPinNote: () => void;
-}
+import type { NoteCardProps } from "../../interfaces/components";
 
 const NoteCard = ({
 	title,

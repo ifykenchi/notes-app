@@ -6,11 +6,7 @@ import PasswordInput from "../../components/Input/PasswordInput";
 import { validateEmail } from "../../utils/helper";
 import axiosInstance from "../../utils/axiosInstance";
 import { AxiosError } from "axios";
-
-interface LoginResponse {
-	accessToken?: string;
-	message?: string;
-}
+import type { LoginResponse } from "../../interfaces/pages.tsx";
 
 const Login: React.FC = () => {
 	const [email, setEmail] = useState<string>("");

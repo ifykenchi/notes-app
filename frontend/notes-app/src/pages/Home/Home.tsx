@@ -11,33 +11,12 @@ import EmptyCard from "../../components/EmptyCard/EmptyCard";
 import AddNotesImg from "../../assets/images/add-notes.svg";
 import NoDataImg from "../../assets/images/no-data.svg";
 import { AxiosError } from "axios";
-
-interface Note {
-	_id: string;
-	title: string;
-	content: string;
-	tags: string[];
-	isPinned: boolean;
-	createdOn: string;
-}
-
-interface UserInfo {
-	_id: string;
-	fullName: string;
-	email: string;
-}
-
-interface AddEditModalState {
-	isShown: boolean;
-	type: "add" | "edit";
-	data: Note | null;
-}
-
-interface ToastState {
-	isShown: boolean;
-	message: string;
-	type?: "add" | "edit" | "delete" | "pin";
-}
+import type {
+	Note,
+	UserInfo,
+	AddEditModalState,
+	ToastState,
+} from "../../interfaces/pages";
 
 const Home: React.FC = () => {
 	const [openAddEditModal, setOpenAddEditModal] = useState<AddEditModalState>({

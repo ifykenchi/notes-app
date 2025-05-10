@@ -1,12 +1,6 @@
 import React, { useState } from "react";
-import type { ChangeEvent } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
-
-interface PasswordInputProps {
-	value: string;
-	onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-	placeholder?: string;
-}
+import type { PasswordInputProps } from "../../interfaces/components";
 
 const PasswordInput: React.FC<PasswordInputProps> = ({
 	value,
