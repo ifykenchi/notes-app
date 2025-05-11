@@ -4,14 +4,12 @@ import User from "../models/user.model";
 import Note from "../models/note.model";
 import { hash, isMatch } from "../utils/hash";
 import env from "../env";
-
-interface IUser {
-	_id: string;
-	fullName: string;
-	email: string;
-	password: string;
-	createdOn: Date;
-}
+import {
+	createSchema,
+	loginSchema,
+	addNoteSchema,
+} from "../middleware/validator.midware";
+import type { IUser } from "../interfaces/controllers.interfaces";
 
 declare global {
 	namespace Express {
@@ -26,18 +24,11 @@ declare global {
 export const createAccount = async (req: Request, res: Response) => {
 	const { fullName, email, password } = req.body;
 
-	if (!fullName) {
-		res.status(400).json({ error: true, message: "Full Name is required" });
-		return;
-	}
+	const result = createSchema(req.body);
 
-	if (!email) {
-		res.status(400).json({ error: true, message: "Email is required" });
-		return;
-	}
-
-	if (!password) {
-		res.status(400).json({ error: true, message: "Password is required" });
+	if (result.error) {
+		const errorMessage = result.error.details[0].message.replace(/"/g, "");
+		res.status(400).json({ error: true, message: errorMessage });
 		return;
 	}
 
@@ -81,13 +72,11 @@ export const createAccount = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
 	const { email, password } = req.body;
 
-	if (!email) {
-		res.status(400).json({ message: "Email is required" });
-		return;
-	}
+	const result = loginSchema(req.body);
 
-	if (!password) {
-		res.status(400).json({ message: "Password is required" });
+	if (result.error) {
+		const errorMessage = result.error.details[0].message.replace(/"/g, "");
+		res.status(400).json({ error: true, message: errorMessage });
 		return;
 	}
 
@@ -163,13 +152,11 @@ export const addNote = async (req: Request, res: Response) => {
 
 	const { user } = req.user;
 
-	if (!title) {
-		res.status(400).json({ error: true, message: "Title is required" });
-		return;
-	}
+	const result = addNoteSchema(req.body);
 
-	if (!content) {
-		res.status(400).json({ error: true, message: "Content is required" });
+	if (result.error) {
+		const errorMessage = result.error.details[0].message.replace(/"/g, "");
+		res.status(400).json({ error: true, message: errorMessage });
 		return;
 	}
 

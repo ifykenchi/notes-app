@@ -1,13 +1,6 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
+import mongoose, { Schema, Model } from "mongoose";
 
-interface INote extends Document {
-	title: string;
-	content: string;
-	tags: string[];
-	isPinned: boolean;
-	userId: string;
-	createdOn: Date;
-}
+import type { INote } from "../interfaces/models.interfaces";
 
 const noteSchema: Schema = new Schema({
 	title: { type: String, required: true },

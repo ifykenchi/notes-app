@@ -1,11 +1,5 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
-
-interface IUser extends Document {
-	fullName: string;
-	email: string;
-	password: string;
-	createdOn: Date;
-}
+import mongoose, { Schema, Model } from "mongoose";
+import type { IUser } from "../interfaces/models.interfaces";
 
 const userSchema: Schema = new Schema({
 	fullName: { type: String },
